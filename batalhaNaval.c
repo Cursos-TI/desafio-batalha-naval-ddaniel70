@@ -1,135 +1,171 @@
 #include <stdio.h>
 
-// Desafio Batalha Naval - MateCheck
-// Este código inicial serve como base para o desenvolvimento do sistema de Batalha Naval.
-// Siga os comentários para implementar cada parte do desafio.
+#define linhas 10            // define a quantidade de linhas da matriz
+#define colunas 10          // define a quantidade de colunas da matriz
+#define Tamanho_navios 3   // define o tamanho dos navios
 
 int main() {
-               // variaveis 
 
-    int tabuleiro[10][10];                  // variavel chamada tabuleiro onde e uma matriz bidimensional 10 por 10, represetando o tabuleiro
-    int navio_horizontal[3] = {3, 3, 3};   // vetor que representa o navio horizontal
-    int navio_vertical[3] = {3, 3, 3};    // vetor que representa o navio vertical
+      // variáveis matrizes e vetores
+  
+     // matrizes
 
-            // variaveis de cordenadas do navios 
-    int linha_navio1 = 2, coluna_navio1 = 4;          // cordenados navio horizontal 
-    int linha_navio2 = 5, coluna_navio2 = 1;          // cordenadas navio vertical 
-    int permissao = 1;                                   // variavel que determina se o navio pode ou nao usar aquela casa
-    
-            // atenção lembre que os indices começam com 0
+    int tabuleiro[linhas][colunas];          // define a matriz tabuleiro 
+    int permissao = 1;                      // variavel que determina se o navio pode ou nao usar aquela casa
 
-         // iniciar todos os elementos da matriz tabuleiro com 0, representando a água 
+     // vetores navios vertical e horizontal
+    int navio_horizontal[Tamanho_navios] = {4, 5 , 6};    // vetor do navio horizontal, colunas que o navio horizontal vai ocupar
+    int navio_vertical[Tamanho_navios] = {5, 6, 7};      // vetor do navio vertical, com as linhas que ele vai ocupar 
+ 
+       // vetores 1 navio diagonal
+    int diagonal_linhas_1 [Tamanho_navios] = {9, 8, 7};         // vetor linhas navio 1 diagonal com as posições que ele vai ocupar
+    int diagonal_colunas_1 [Tamanho_navios] = {0, 1, 2};       // vetor colunas navio 1 diagonal com as posições que ele vai oucupar
 
-    for (int linha = 0; linha < 10; linha++)                     // esse loop externo controla as linhas 
+       // vetores 2 navio diagonal
+    int diagonal_linhas_2 [Tamanho_navios] = {0, 1, 2};        // vetor linhas navio 2 diagonal
+    int diagonal_colunas_2 [Tamanho_navios] = {0,1, 2};      // vetor colunas navio 2 diagonal
+
+
+    // iniciar todos os elementos da matriz com 0 representando agua 
+
+     for (int linha = 0; linha < 10; linha++)                     // esse loop externo controla as linhas 
     {
         for (int coluna = 0; coluna < 10; coluna++)            // esse loop interno controla as colunas
         {
             tabuleiro[linha][coluna] = 0;                    // quando linha for 0 esse loop percorre de os elementos 
-        }                                                   // da linha 0, e das colunas 0 ate a 9, [0][0] = a 0, [0][1]= 0 e assim vai 
+        }                                                   
     }
 
-            //cada navio ocupa 3 posições e cada posição e representada pelo numero 3
+        // verificar se o navio cabe no tabuleiro e se ele nao vai sobrepor outro
+       // apos tudo verificado ele confere se esta livre e posicona o navio
 
-           // navio horizontal
-        
-         // logica simples de verificar se o navio nao sobressai e nao vai ocupar casas que ja estao coupadas
-
-       // aqui ele verifica que se a posição do navio nao e maior que 7 , pois o navio ocupa 3 casas, exemplo a 7 e mais duas totalizando 9 o maximo , pois o navio e horizontal
+     // verificar navio horizontal
     
-    if ((linha_navio1 <= 9 && coluna_navio1 <= 7) && (linha_navio1 >= 0 && coluna_navio1 >= 0)) // aqui ele verifica se o navio nao vai sobressair o tabuleiro
-    {   
-        for (int i = 0; i < 3; i++)                                        // aqui ele roda o if else para garantir que as casas que o navio vai ocupar casas que estao ocupadas por outro
-        {
-          if (tabuleiro[linha_navio1][coluna_navio1 + i] != 0)           // verifica se as casas estao ocupadas
-          {
-            permissao = 0;                                             // se as casas tiverem ocupadas a variavel ganha valor 0
-            printf("Essa posição esta ocupada tente novamente \n");   // imprime que tem uma casa ocupada
-            break;                                                   // evita verificar e imprimir mais vezes desnecessariamente 
-          }
-        }
-    } else
-         {
-           printf("Essa posição do Navio sobressai o tabuleiro!!! tente novamente \n");     // se o navio se sobressair do tabuleiro ele imprime essa mensagem
-         }
-
-        // aqui iremos colocar o valor do navio do vetor na matriz
-
-    if (permissao == 1)                                   // se tiver as casas estiver livres, atribuimis as elas o valor do navio com o loop, 3 casas com numero 3
+     for (int i = 0; i < 3; i++)
     {
-        for (int i = 0; i < 3; i++)                      // loop for para o navio horizontal, lembrando que o navio ocupa 3 espaços 
-        {                                               // iremos colocar ele na segunda linha nas colunas 4 5 6 , lembrando que os indices começam em 0
-            tabuleiro[linha_navio1][coluna_navio1 + i] = navio_horizontal[i]; // pega o valor do vetor e atrbui na matriz na posição desejada
+        if ((navio_vertical[i] > colunas) || (tabuleiro[2][navio_horizontal[i]] != 0))
+        {
+            printf(" O navio sobressai o tabuleiro ou essas cordenadas ja estao ocupadas \n");
+            permissao = 0;       // caso o navio sobressai ou sobreponha a permissao e negada
+            break; 
+        }   
+    }
+
+    // posicionar o navio horizontal
+
+    if (permissao == 1)                                   // casas livres atribuimos o valor 3 em cada uma dela
+    {                                                     // iremos colocar ele na linha 2, colunas 4, 5, 6 indices comecam com 0
+        for (int i = 0; i < Tamanho_navios; i++)         // loop for para o navio horizontal, lembrando que o navio ocupa 3 espaços 
+        {                                             
+            tabuleiro[2][navio_horizontal[i]] = Tamanho_navios;     // atribui o valor do navio 
         }
     } 
 
-       // navio vertical
 
-         // aqui verificamos se linha 5 6 e 7 esta livre com && , usei uma lógica simples de verificar
-        // verificamos se o navio nao vai sair da tabuleiro, aqui ele ficara na linha 5 6 e 7 , ent verificamos se a linha 5 mais duas casas nao passa limite do tabuleiro
-       // verificamos a linha ate <= 7 pois e adicionado mais duas casas ao posicionar o navio , isso para sobressair o limite das linhas que e ate 9
-   
-    if ((linha_navio2 <= 7 && coluna_navio2 <= 9) && (linha_navio2 >= 0 && coluna_navio2 >= 0)) // aqui ele verifica se o navio nao vai sobressair o tabuleiro
-    {   
-        permissao = 1;                          // aqui damos o valor 1 a variavel para ela esquecer o valor que foi atribuido a ela no teste anterior
-        for (int i = 0; i < 3; i++)            // aqui ele roda o if else para garantir que as casas que o navio vai ocupar casas que estao ocupadas por outro
-        {
-          if (tabuleiro[linha_navio2 + i][coluna_navio2] != 0)    // verifica se as casas estao ocupadas
-          {
-            permissao = 0;                                             // se as casas tiverem ocupadas a variavel ganha valor 0
-            printf("Essa posição esta ocupada tente novamente \n");   // imprime que tem uma casa ocupada
-            break;                                                   // evita verificar e imprimir mais vezes desnecessariamente 
-          }
-        }
-    } else
-         {
-           printf("Essa posição do Navio sobressai o tabuleiro!!! tente novamente \n");  // imprime a mensagem que o navio sobressaiu o tabuleiro 
-         }
+    // verificar o navio vertical 
 
-         // aqui iremos colocar o valor do navio vertical vetor na matriz 
+    permissao = 1;  // reiniciando a variavel
 
-      if (permissao == 1)                                      // se a variavel tiver valor 1 as casas estao livre o loop roda
+    for (int i = 0 ; i < Tamanho_navios; i++)   
     {
-        for (int i = 0; i < 3; i++)                          // loop for para o navio horizontal, lembrando que o navio ocupa 3 espaços 
-            {                                               // iremos colocar ele na segunda linha nas colunas 4 5 6 , lembrando que os indices começam em 0
-                tabuleiro[linha_navio2 + i][coluna_navio2] = navio_vertical[i]; // pega o valor do vetor e atrbui na matriz na posição desejada
-            }
+        if ((navio_vertical[i] > linhas) || (tabuleiro[navio_vertical[i]][4] != 0))
+       {
+            printf(" O navio sobressai o tabuleiro ou essas cordenadas ja estao ocupadas \n");
+            permissao = 0;       // caso o navio sobressai ou sobreponha a permissao e negada
+            break; 
+        }   
+    }
+ 
+    // apos tudo verificado ele confere se esta livre e posicona o navio vertical
+
+    if (permissao == 1)                                   // casas livres atribuimos o valor 3 em cada uma dela
+    {
+        for (int i = 0; i < Tamanho_navios; i++)         // loop for para o navio horizontal, lembrando que o navio ocupa 3 espaços 
+        {                                                // iremos colocar ele na segunda linha 5, 6, 7, e na coluna 4 os indices começam em 0
+            tabuleiro[navio_vertical[i]][4] = Tamanho_navios;     // atribui o valor do navio 
+        }
     } 
 
-        // imprimir o tabuleiro
-   
-        // iremos imprimir as letras que ficaram em cima de A a J para representar as colunas
+    
+    // verifica o navio diagonal 1 , verifica colunas, linhas e posições para nao sobrepor
+    
+    permissao = 1;  // reinicio a variavel para verificar o proximo navio 
+    
+    for (int i = 0 ; i < Tamanho_navios; i++)   
+    {
+        if (( (diagonal_linhas_1[i] > linhas) || (diagonal_colunas_1[i] > colunas)) || (tabuleiro[diagonal_linhas_1[i]][diagonal_colunas_1[i]] != 0))
+        {
+            printf(" O navio sobressai o tabuleiro ou essas cordenadas ja estao ocupadas \n");
+            permissao = 0;       // caso o navio sobressai ou sobreponha a permissao e negada
+            break;
+        }    
+    }
+
+   // Posiciona navio diagonal 1 começando em (9,0)
+  // apos tudo verificado ele confere se esta livre e posicona o navio horizontal
+
+    if (permissao == 1)                                // casas livres atribuimos o valor 3 em cada uma dela
+    {
+        for (int i = 0; i < Tamanho_navios; i++) 
+        {
+            tabuleiro[diagonal_linhas_1[i]][diagonal_colunas_1[i]] = Tamanho_navios; // pega as posições que ele vai ficar no vetor e atribui valor
+        }
+    } 
+
+  
+     // verifica o navio diagonal 2
+
+    permissao = 1;  // reinicio a variavel para verificar o proximo navio 
+
+    for (int i = 0 ; i < Tamanho_navios; i++)   
+    {
+        if (( (diagonal_linhas_2[i] > linhas) || (diagonal_colunas_2[i] > colunas)) || (tabuleiro[diagonal_linhas_2[i]][diagonal_colunas_2[i]] != 0))
+        {
+            printf(" O navio sobressai o tabuleiro ou essas cordenadas ja estao ocupadas \n");
+            permissao = 0;       // caso o navio sobressai ou sobreponha a permissao e negada
+            break;
+        }    
+    }
+
+    // Posiciona navio diagonal 2  começando em (0,0)
+    // apos tudo verificado ele confere se esta livre e posicona o navio horizontal
+
+    if (permissao == 1)                                // casas livres atribuimos o valor 3 em cada uma dela
+    {
+        for (int i = 0; i < Tamanho_navios; i++) 
+        {
+            tabuleiro[diagonal_linhas_2[i]][diagonal_colunas_2[i]] = Tamanho_navios; // pega as posições que ele vai ficar no vetor e atribui valor
+        }
+    } 
+
+
+  // iremos imprimir as letras que ficaram em cima de A a J para representar as colunas
         
     printf("Tabuleiro Batalha Naval \n");                  // imprime o cabeçalho do jogo 
 
-    printf("   ");                                        // para empurras as letras mais a direita, deixando elas devidamente 
+    printf("  ");                                        // para empurras as letras mais a direita, deixando elas devidamente 
         for (char letras = 'A'; letras <= 'J'; letras++) // encima da coluna e não do marcador de linhas
         {
             printf(" %c ", letras);                     // espaço antes do %c para as letras nao ficare agrupadas e depois
         }
     
-    printf("\n");                                     // pular a linha
+    printf("\n"); 
 
-        // iremos imprimir os números que ficam na lateral de 1 a 1o para identificar as linhas
+         // iremos imprimir os números que ficam na lateral de 1 a 1o para identificar as linhas
         // junto iremos imprimir toda a matriz
     
-    for (int linha = 0; linha < 10; linha++)            // controla e imprime os números das linhas 
-    {
-        printf("%2d", linha + 1);                       // numeros da linha , usamos %2d para que tenha duas casas decimais e número 10 n empurre pra frente os outros 
-        for (int coluna = 0; coluna < 10; coluna++)    // colocamos  linha +1 para exibir de 1 a 10
-        {                                              // controla e imprime as colunas daquela linha
-            printf(" %d ", tabuleiro[linha][coluna]);  // imprime  a linha e todas as colunas daquela linha , tem um espaço depois do %d para nao deixar os numeros juntos e antes para deixar eles alinhados com as letras
-        }
+    for (int linha = 0; linha < linhas; linha++)             // controla e imprime os números das linhas 
+    {                                                   // numeros da linha , usamos %2d para ter duas casas decimais e número 10 n empurre pra frente os outros 
+        printf("%2d", linha + 1);                      //colocamos  linha +1 para exibir de 1 a 10
+        for (int coluna = 0; coluna < colunas; coluna++)    
+        {                                              
+            printf(" %d ", tabuleiro[linha][coluna]);   //tem um espaço depois do %d para nao deixar os numeros juntos 
+        }                                              // tem um espaço antes para deixar eles alinhados com as letras
         printf("\n");                                 // aqui pulamos a linha que estamos e vamos para a proxima
     }
-    
+
     return 0;
 }
-
-    // Nível Aventureiro - Expansão do Tabuleiro e Posicionamento Diagonal
-    // Sugestão: Expanda o tabuleiro para uma matriz 10x10.
-    // Sugestão: Posicione quatro navios no tabuleiro, incluindo dois na diagonal.
-    // Sugestão: Exiba o tabuleiro completo no console, mostrando 0 para posições vazias e 3 para posições ocupadas.
-
     // Nível Mestre - Habilidades Especiais com Matrizes
     // Sugestão: Crie matrizes para representar habilidades especiais como cone, cruz, e octaedro.
     // Sugestão: Utilize estruturas de repetição aninhadas para preencher as áreas afetadas por essas habilidades no tabuleiro.
